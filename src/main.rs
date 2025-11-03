@@ -1,6 +1,7 @@
 use bevy::prelude::*;
+use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    FontAssets, LanguageSettings, QuitButton, StartButton, load_font_assets, setup_menu_ui,
+    FontAssets, LanguageSettings, QuitButton, StartButton, cleanup_menu_ui, load_font_assets, setup_map_ui, setup_menu_ui
 };
 
 /// 游戏状态
@@ -23,6 +24,7 @@ fn main() -> anyhow::Result<()> {
             }),
             ..default()
         }))
+        .add_plugins(ShapePlugin)
         .init_state::<GameState>()
         .init_resource::<LanguageSettings>()
         .init_resource::<FontAssets>()
@@ -31,6 +33,9 @@ fn main() -> anyhow::Result<()> {
         // 菜单系统
         .add_systems(OnEnter(GameState::Menu), setup_menu_ui)
         .add_systems(Update, handle_menu_button.run_if(in_state(GameState::Menu)))
+        .add_systems(OnExit(GameState::Menu), cleanup_menu_ui)
+        // 地图系统
+        .add_systems(OnEnter(GameState::Playing), setup_map_ui)
         .run();
 
     Ok(())

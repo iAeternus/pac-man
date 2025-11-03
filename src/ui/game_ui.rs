@@ -105,3 +105,9 @@ pub fn setup_menu_ui(
                 });
         });
 }
+
+pub fn cleanup_menu_ui(mut commands: Commands, query: Query<Entity, With<MenuUI>>) {
+    for entity in &query {
+        commands.entity(entity).despawn();
+    }
+}

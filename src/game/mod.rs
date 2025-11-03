@@ -1,3 +1,3 @@
-mod game_ui;
+mod map;
 
-pub use game_ui::*;
+pub use map::*;

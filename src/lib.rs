@@ -1,7 +1,8 @@
 mod game;
 mod fonts;
 mod localization;
+mod ui;
 
-pub use game::{setup_menu_ui, StartButton, QuitButton};
+pub use ui::*;
 pub use fonts::{FontAssets, load_font_assets};
 pub use localization::LanguageSettings;

@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.100"
 bevy = "0.17.2"
+bevy_prototype_lyon = "0.15.0"
