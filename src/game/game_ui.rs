@@ -50,7 +50,6 @@ pub fn setup_menu_ui(
             ));
 
             // Start 按钮
-            let start_color = Color::srgb(0.0, 0.6, 0.0); // 深绿色
             parent
                 .spawn((
                     Button,
@@ -63,7 +62,6 @@ pub fn setup_menu_ui(
                         border: UiRect::all(Val::Px(2.0)),
                         ..default()
                     },
-                    BackgroundColor(start_color),
                     BorderColor::all(Color::srgb(0.2, 1.0, 0.2)), // 亮绿色边框
                     StartButton,
                 ))
@@ -80,7 +78,6 @@ pub fn setup_menu_ui(
                 });
 
             // Quit 按钮
-            let quit_color = Color::srgb(0.6, 0.0, 0.0); // 深红
             parent
                 .spawn((
                     Button,
@@ -92,7 +89,6 @@ pub fn setup_menu_ui(
                         border: UiRect::all(Val::Px(2.0)),
                         ..default()
                     },
-                    BackgroundColor(quit_color),
                     BorderColor::all(Color::srgb(1.0, 0.3, 0.3)), // 红色边框
                     QuitButton,
                 ))
