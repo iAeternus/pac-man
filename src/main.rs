@@ -4,8 +4,8 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
     FontAssets, GameState, LanguageSettings, MapDataResource, MapLoader, PlayerComponent,
-    QuitButton, StartButton, TextMapLoader, cleanup_menu_ui, load_font_assets, setup_map_ui,
-    setup_menu_ui,
+    QuitButton, StartButton, TextMapLoader, WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui,
+    load_font_assets, setup_map_ui, setup_menu_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -13,7 +13,7 @@ fn main() -> anyhow::Result<()> {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Pac-Man".into(),
-                resolution: (960, 640).into(),
+                resolution: (WINDOW_WIDTH, WINDOW_HEIGHT).into(),
                 ..default()
             }),
             ..default()
@@ -98,16 +98,16 @@ fn load_map_data(mut commands: Commands) {
 }
 
 fn handle_player_input(
-    keyboard: Res<ButtonInput<KeyCode>>,
-    mut query: Query<&mut PlayerComponent>,
-    map_res: Res<MapDataResource>,
+    _keyboard: Res<ButtonInput<KeyCode>>,
+    mut _query: Query<&mut PlayerComponent>,
+    _map_res: Res<MapDataResource>,
 ) {
     // TODO:
 }
 
 fn update_player_position(
-    mut query: Query<(&mut Transform, &PlayerComponent)>,
-    map_res: Res<MapDataResource>,
+    mut _query: Query<(&mut Transform, &PlayerComponent)>,
+    _map_res: Res<MapDataResource>,
 ) {
     // TODO:
 }

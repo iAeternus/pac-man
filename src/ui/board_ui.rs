@@ -2,7 +2,8 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, MapDataResource, PELLET_RADIUS, PLAYER_RADIUS, TILE_SIZE, WALL_THICKNESS, game::{MapData, Player, TileType}
+    HALF, MapDataResource, PELLET_RADIUS, PLAYER_RADIUS, TILE_SIZE, WALL_THICKNESS,
+    game::{MapData, TileType},
 };
 
 #[derive(Component)]

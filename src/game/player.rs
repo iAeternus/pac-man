@@ -1,5 +1,5 @@
 use bevy::ecs::component::Component;
-use glam::{IVec2, Vec2};
+use glam::IVec2;
 
 use crate::game::TileType;
 
