@@ -2,7 +2,8 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, MapDataResource, PELLET_RADIUS, PLAYER_RADIUS, TILE_SIZE, WALL_THICKNESS,
+    HALF, MapDataResource, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, TILE_SIZE,
+    WALL_COLOR, WALL_THICKNESS,
     game::{MapData, TileType},
 };
 
@@ -15,11 +16,6 @@ pub struct PlayerUI;
 /// 绘制地图UI
 pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
     let map_data = &map_res.0;
-
-    // 地图参数
-    let wall_color = Color::srgb(0.0, 0.6, 1.0); // 蓝色墙
-    let pellet_color = Color::WHITE; // 白色豆子
-    let player_color = Color::srgb(1.0, 1.0, 0.0); // 黄色玩家
 
     // (offset_x, offset_y)为地图左上角点
     let offset_x = -((map_data.width as f32) * TILE_SIZE) / 2.0;
@@ -53,7 +49,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                             let line = shapes::Line(*a, *b);
                             parent.spawn((
                                 ShapeBuilder::with(&line)
-                                    .stroke(Stroke::new(wall_color, WALL_THICKNESS))
+                                    .stroke(Stroke::new(WALL_COLOR, WALL_THICKNESS))
                                     .build(),
                                 Transform::from_xyz(0.0, 0.0, 1.0),
                             ));
@@ -68,7 +64,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                     commands.entity(root).with_children(|parent| {
                         parent.spawn((
                             ShapeBuilder::with(&circle)
-                                .fill(Fill::color(pellet_color))
+                                .fill(Fill::color(PELLET_COLOR))
                                 .build(),
                             Transform::from_xyz(0.0, 0.0, 2.0),
                         ));
@@ -81,7 +77,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                     };
                     commands.spawn((
                         ShapeBuilder::with(&circle)
-                            .fill(Fill::color(player_color))
+                            .fill(Fill::color(PLAYER_COLOR))
                             .build(),
                         Transform::from_xyz(0.0, 0.0, 3.0),
                         PlayerUI,

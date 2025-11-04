@@ -3,9 +3,10 @@ use std::path::Path;
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    FontAssets, GameState, LanguageSettings, MapDataResource, MapLoader, PlayerComponent,
-    QuitButton, StartButton, TextMapLoader, WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui,
-    load_font_assets, setup_map_ui, setup_menu_ui,
+    BACKGROUND_COLOR, FontAssets, GameState, HOVERED_COLOR, LanguageSettings, MAP_PATH,
+    MapDataResource, MapLoader, NONE_COLOR, PRESSED_COLOR, PlayerComponent, QuitButton,
+    StartButton, TextMapLoader, WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, load_font_assets,
+    setup_map_ui, setup_menu_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -22,7 +23,7 @@ fn main() -> anyhow::Result<()> {
         .init_state::<GameState>()
         .init_resource::<LanguageSettings>()
         .init_resource::<FontAssets>()
-        .insert_resource(ClearColor(Color::BLACK))
+        .insert_resource(ClearColor(BACKGROUND_COLOR))
         .add_systems(Startup, (load_font_assets, setup_camera, load_map_data))
         // 菜单系统
         .add_systems(OnEnter(GameState::Menu), setup_menu_ui)
@@ -63,7 +64,7 @@ fn handle_menu_button(
         match *interaction {
             Interaction::Pressed => {
                 // 按下时的视觉反馈
-                *color = BackgroundColor(Color::srgb(0.5, 0.5, 0.5));
+                *color = BackgroundColor(PRESSED_COLOR);
 
                 if start_btn.is_some() {
                     info!("Start pressed -> Switching to Playing");
@@ -77,19 +78,17 @@ fn handle_menu_button(
             }
             Interaction::Hovered => {
                 // 悬停效果
-                *color = BackgroundColor(Color::srgb(0.3, 0.3, 0.3));
+                *color = BackgroundColor(HOVERED_COLOR);
             }
             Interaction::None => {
                 // 恢复默认颜色
-                *color = BackgroundColor(Color::srgb(0.2, 0.2, 0.2));
+                *color = BackgroundColor(NONE_COLOR);
             }
         }
     }
 }
 
 fn load_map_data(mut commands: Commands) {
-    const MAP_PATH: &'static str = "assets/map/pacman.map";
-
     let loader = TextMapLoader;
     let map_path = Path::new(MAP_PATH);
     let map_data = loader.load_map(map_path).expect("Failed to load map");

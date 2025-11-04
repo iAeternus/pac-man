@@ -1,8 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    fonts::{FontAssets, get_font_for_language},
-    localization::LanguageSettings,
+    BACKGROUND_COLOR, BUTTON_TEXT_COLOR, QUIT_BUTTON_BORDER_COLOR, START_BUTTON_BORDER_COLOR, TITLE_COLOR, fonts::{FontAssets, get_font_for_language}, localization::LanguageSettings
 };
 
 #[derive(Component)]
@@ -34,7 +33,7 @@ pub fn setup_menu_ui(
                 align_items: AlignItems::Center,
                 ..default()
             },
-            BackgroundColor(Color::BLACK),
+            BackgroundColor(BACKGROUND_COLOR),
             MenuUI,
         ))
         .with_children(|parent| {
@@ -46,7 +45,7 @@ pub fn setup_menu_ui(
                     font_size: 80.0,
                     ..default()
                 },
-                TextColor(Color::srgb(1.0, 1.0, 0.0)), // 黄色
+                TextColor(TITLE_COLOR),
             ));
 
             // Start 按钮
@@ -62,7 +61,7 @@ pub fn setup_menu_ui(
                         border: UiRect::all(Val::Px(2.0)),
                         ..default()
                     },
-                    BorderColor::all(Color::srgb(0.2, 1.0, 0.2)), // 亮绿色边框
+                    BorderColor::all(START_BUTTON_BORDER_COLOR),
                     StartButton,
                 ))
                 .with_children(|btn| {
@@ -73,7 +72,7 @@ pub fn setup_menu_ui(
                             font_size: 30.0,
                             ..default()
                         },
-                        TextColor(Color::srgb(1.0, 1.0, 1.0)), // 白色文字
+                        TextColor(BUTTON_TEXT_COLOR),
                     ));
                 });
 
@@ -89,7 +88,7 @@ pub fn setup_menu_ui(
                         border: UiRect::all(Val::Px(2.0)),
                         ..default()
                     },
-                    BorderColor::all(Color::srgb(1.0, 0.3, 0.3)), // 红色边框
+                    BorderColor::all(QUIT_BUTTON_BORDER_COLOR),
                     QuitButton,
                 ))
                 .with_children(|btn| {
@@ -100,7 +99,7 @@ pub fn setup_menu_ui(
                             font_size: 30.0,
                             ..default()
                         },
-                        TextColor(Color::srgb(1.0, 1.0, 1.0)), // 白色文字
+                        TextColor(BUTTON_TEXT_COLOR),
                     ));
                 });
         });
