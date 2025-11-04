@@ -23,8 +23,8 @@ cargo run
 
 ### Core Systems
 
-* [ ] Game State Machine (Menu / Playing / Paused / Game Over)
-* [ ] Map System (Static map loading and tile-based collision)
+* [x] Game State Machine (Menu / Playing / Paused / Game Over)
+* [x] Map System (Static map loading and tile-based collision)
 * [ ] Player System (Keyboard input, movement, pellet eating)
 * [ ] Ghost System (Chasing, fleeing, patrolling behaviors)
 * [ ] Item System (Normal and power pellets)
