@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    FontAssets, LanguageSettings, QuitButton, StartButton, cleanup_menu_ui, load_font_assets, setup_map_ui, setup_menu_ui
+    FontAssets, LanguageSettings, QuitButton, StartButton, cleanup_menu_ui, load_font_assets,
+    setup_map_ui, setup_menu_ui,
 };
 
 /// 游戏状态
