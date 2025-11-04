@@ -1,5 +1,7 @@
 use std::{fs, path::Path};
 
+use bevy::ecs::resource::Resource;
+
 /// 单元格类型
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TileType {
@@ -60,6 +62,9 @@ impl MapLoader for TextMapLoader {
         Ok(map)
     }
 }
+
+#[derive(Resource)]
+pub struct MapDataResource(pub MapData);
 
 #[cfg(test)]
 mod tests {

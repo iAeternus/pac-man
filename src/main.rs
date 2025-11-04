@@ -1,19 +1,11 @@
+use std::path::Path;
+
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    FontAssets, LanguageSettings, QuitButton, StartButton, cleanup_menu_ui, load_font_assets,
-    setup_map_ui, setup_menu_ui,
+    FontAssets, GameState, LanguageSettings, MapDataResource, MapLoader, QuitButton, StartButton,
+    TextMapLoader, cleanup_menu_ui, load_font_assets, setup_map_ui, setup_menu_ui,
 };
-
-/// 游戏状态
-#[derive(States, Default, Clone, Eq, PartialEq, Hash, Debug)]
-pub enum GameState {
-    #[default]
-    Menu, // 主菜单
-    Playing,  // 游戏中
-    Paused,   // 暂停
-    GameOver, // 游戏结束
-}
 
 fn main() -> anyhow::Result<()> {
     App::new()
@@ -30,7 +22,7 @@ fn main() -> anyhow::Result<()> {
         .init_resource::<LanguageSettings>()
         .init_resource::<FontAssets>()
         .insert_resource(ClearColor(Color::BLACK))
-        .add_systems(Startup, (load_font_assets, setup_camera))
+        .add_systems(Startup, (load_font_assets, setup_camera, load_map_data))
         // 菜单系统
         .add_systems(OnEnter(GameState::Menu), setup_menu_ui)
         .add_systems(Update, handle_menu_button.run_if(in_state(GameState::Menu)))
@@ -87,4 +79,14 @@ fn handle_menu_button(
             }
         }
     }
+}
+
+fn load_map_data(mut commands: Commands) {
+    const MAP_PATH: &'static str = "assets/map/pacman.map";
+
+    let loader = TextMapLoader;
+    let map_path = Path::new(MAP_PATH);
+    let map_data = loader.load_map(map_path).expect("Failed to load map");
+
+    commands.insert_resource(MapDataResource(map_data));
 }

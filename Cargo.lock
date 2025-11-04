@@ -3539,6 +3539,7 @@ dependencies = [
  "anyhow",
  "bevy",
  "bevy_prototype_lyon",
+ "glam",
 ]
 
 [[package]]

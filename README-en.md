@@ -7,8 +7,6 @@ Implements clear modular layering, AI behaviors, collision systems, and animatio
 
 - **Engine**: Bevy 0.17.2
 - **Language**: Rust 2024 
-- **Rendering**: 2D Sprites + Orthographic Camera  
-- **Goal**: Recreate the classic Pac-Man gameplay using a modern ECS-based architecture  
 
 ## Quick Start
 
