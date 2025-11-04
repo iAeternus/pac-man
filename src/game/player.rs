@@ -1,4 +1,5 @@
-use glam::IVec2;
+use bevy::ecs::component::Component;
+use glam::{IVec2, Vec2};
 
 use crate::game::TileType;
 
@@ -51,4 +52,9 @@ impl Player {
 
         self.tile_pos = new_pos;
     }
+}
+
+#[derive(Component)]
+pub struct PlayerComponent {
+    pub player: Player,
 }

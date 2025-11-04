@@ -2,15 +2,14 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    MapDataResource,
-    game::{MapData, TileType},
+    HALF, MapDataResource, PELLET_RADIUS, PLAYER_RADIUS, TILE_SIZE, WALL_THICKNESS, game::{MapData, Player, TileType}
 };
-
-const TILE_SIZE: f32 = 20.0;
-const HALF: f32 = TILE_SIZE / 2.0;
 
 #[derive(Component)]
 pub struct MapUI;
+
+#[derive(Component)]
+pub struct PlayerUI;
 
 /// 绘制地图UI
 pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
@@ -19,8 +18,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
     // 地图参数
     let wall_color = Color::srgb(0.0, 0.6, 1.0); // 蓝色墙
     let pellet_color = Color::WHITE; // 白色豆子
-    let wall_thickness = 1.0_f32;
-    let pellet_radius = 2.0_f32;
+    let player_color = Color::srgb(1.0, 1.0, 0.0); // 黄色玩家
 
     // (offset_x, offset_y)为地图左上角点
     let offset_x = -((map_data.width as f32) * TILE_SIZE) / 2.0;
@@ -54,7 +52,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                             let line = shapes::Line(*a, *b);
                             parent.spawn((
                                 ShapeBuilder::with(&line)
-                                    .stroke(Stroke::new(wall_color, wall_thickness))
+                                    .stroke(Stroke::new(wall_color, WALL_THICKNESS))
                                     .build(),
                                 Transform::from_xyz(0.0, 0.0, 1.0),
                             ));
@@ -63,7 +61,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                 }
                 TileType::Pellet => {
                     let circle = shapes::Circle {
-                        radius: pellet_radius,
+                        radius: PELLET_RADIUS,
                         center: Vec2::new(px + HALF, py - HALF),
                     };
                     commands.entity(root).with_children(|parent| {
@@ -75,7 +73,20 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                         ));
                     });
                 }
-                TileType::Player | TileType::Ghost | TileType::Empty => {}
+                TileType::Player => {
+                    let circle = shapes::Circle {
+                        radius: PLAYER_RADIUS,
+                        center: Vec2::new(px + HALF, py - HALF),
+                    };
+                    commands.spawn((
+                        ShapeBuilder::with(&circle)
+                            .fill(Fill::color(player_color))
+                            .build(),
+                        Transform::from_xyz(0.0, 0.0, 3.0),
+                        PlayerUI,
+                    ));
+                }
+                TileType::Ghost | TileType::Empty => {}
             }
         }
     }

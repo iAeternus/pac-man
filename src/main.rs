@@ -3,8 +3,9 @@ use std::path::Path;
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    FontAssets, GameState, LanguageSettings, MapDataResource, MapLoader, QuitButton, StartButton,
-    TextMapLoader, cleanup_menu_ui, load_font_assets, setup_map_ui, setup_menu_ui,
+    FontAssets, GameState, LanguageSettings, MapDataResource, MapLoader, PlayerComponent,
+    QuitButton, StartButton, TextMapLoader, cleanup_menu_ui, load_font_assets, setup_map_ui,
+    setup_menu_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -29,6 +30,11 @@ fn main() -> anyhow::Result<()> {
         .add_systems(OnExit(GameState::Menu), cleanup_menu_ui)
         // 地图系统
         .add_systems(OnEnter(GameState::Playing), setup_map_ui)
+        // 玩家系统
+        .add_systems(
+            Update,
+            (handle_player_input, update_player_position).run_if(in_state(GameState::Playing)),
+        )
         .run();
 
     Ok(())
@@ -89,4 +95,19 @@ fn load_map_data(mut commands: Commands) {
     let map_data = loader.load_map(map_path).expect("Failed to load map");
 
     commands.insert_resource(MapDataResource(map_data));
+}
+
+fn handle_player_input(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mut query: Query<&mut PlayerComponent>,
+    map_res: Res<MapDataResource>,
+) {
+    // TODO:
+}
+
+fn update_player_position(
+    mut query: Query<(&mut Transform, &PlayerComponent)>,
+    map_res: Res<MapDataResource>,
+) {
+    // TODO:
 }
