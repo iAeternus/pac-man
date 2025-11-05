@@ -3,37 +3,40 @@ use std::usize;
 use bevy::prelude::*;
 
 use crate::{
-    MapData, Player, check_position,
+    MapData, PelletType, Player, check_position,
     components::{EatPelletEvent, TileType},
+    is_power_pellet,
 };
 
-/// 处理玩家输入
+/// 处理玩家输入，设置玩家方向
 pub fn handle_player_input(
     mut query: Query<&mut Player>,
     keyboard: Res<ButtonInput<KeyCode>>,
     map_data: Res<MapData>,
 ) {
     for mut player in &mut query {
-        let mut next = player.tile_pos;
+        let mut dir = IVec2::ZERO;
+        if keyboard.pressed(KeyCode::KeyW) {
+            dir.y -= 1;
+        }
+        if keyboard.pressed(KeyCode::KeyS) {
+            dir.y += 1;
+        }
+        if keyboard.pressed(KeyCode::KeyA) {
+            dir.x -= 1;
+        }
+        if keyboard.pressed(KeyCode::KeyD) {
+            dir.x += 1;
+        }
 
-        if keyboard.just_pressed(KeyCode::KeyW) {
-            next.y -= 1;
-        }
-        if keyboard.just_pressed(KeyCode::KeyS) {
-            next.y += 1;
-        }
-        if keyboard.just_pressed(KeyCode::KeyA) {
-            next.x -= 1;
-        }
-        if keyboard.just_pressed(KeyCode::KeyD) {
-            next.x += 1;
-        }
-
-        // 检查是否是墙
-        if check_position(next.y, next.x, map_data.height, map_data.width)
-            && map_data.tiles[next.y as usize][next.x as usize] != TileType::Wall
-        {
-            player.tile_pos = next;
+        // 检查目标位置是否可移动
+        if dir != IVec2::ZERO {
+            let next_pos = player.tile_pos + dir;
+            if check_position(next_pos.x, next_pos.y, map_data.width, map_data.height)
+                && !map_data.is_wall(next_pos.x as usize, next_pos.y as usize)
+            {
+                player.set_direction(dir);
+            }
         }
     }
 }
@@ -43,14 +46,27 @@ pub fn player_update(
     mut query: Query<&mut Player>,
     mut map_data: ResMut<MapData>,
     mut eat_evt: MessageWriter<EatPelletEvent>,
+    time: Res<Time>,
 ) {
     for mut player in &mut query {
-        if let Some(new_pos) = player.try_move(&map_data.tiles) {
-            player.tile_pos = new_pos;
-            if map_data.tiles[new_pos.y as usize][new_pos.x as usize] == TileType::Pellet {
-                map_data.tiles[new_pos.y as usize][new_pos.x as usize] = TileType::Empty;
-                eat_evt.write(EatPelletEvent { position: new_pos });
+        if !player.is_moving {
+            // 不在移动时，重置累积时间
+            player.reset_accumulated_time();
+            continue;
+        }
+
+        player.accumulated_time += time.delta_secs();
+        while player.can_move() {
+            // 执行移动
+            if let Some(new_pos) = player.try_move(&map_data.tiles) {
+                player.tile_pos = new_pos;
+                if map_data.is_pellet(new_pos.x as usize, new_pos.y as usize) {
+                    map_data.set(new_pos.x as usize, new_pos.y as usize, TileType::Empty);
+                    eat_evt.write(EatPelletEvent::new(new_pos));
+                }
             }
+            // 减去移动间隔，继续检查是否还能移动
+            player.accumulated_time -= player.get_move_interval();
         }
     }
 }

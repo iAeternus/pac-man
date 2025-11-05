@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 
 use crate::{
-    BACKGROUND_COLOR, BUTTON_TEXT_COLOR, QUIT_BUTTON_BORDER_COLOR, START_BUTTON_BORDER_COLOR, TITLE_COLOR, systems::fonts::{FontAssets, get_font_for_language}, localization::LanguageSettings
+    BACKGROUND_COLOR, BUTTON_TEXT_COLOR, QUIT_BUTTON_BORDER_COLOR, START_BUTTON_BORDER_COLOR,
+    TITLE_COLOR,
+    localization::LanguageSettings,
+    systems::fonts::{FontAssets, get_font_for_language},
 };
 
 #[derive(Component)]

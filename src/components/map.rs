@@ -13,6 +13,7 @@ pub enum TileType {
 }
 
 /// 地图数据
+/// 注意：只有数组访问是 tiles[y][x]，其他一律为 (x, y)
 #[derive(Debug, Resource)]
 pub struct MapData {
     pub width: usize,
@@ -27,6 +28,30 @@ impl MapData {
             height,
             tiles: vec![vec![TileType::Empty; width]; height],
         }
+    }
+
+    pub fn is_wall(&self, x: usize, y: usize) -> bool {
+        self.tiles[y][x] == TileType::Wall
+    }
+
+    pub fn is_pellet(&self, x: usize, y: usize) -> bool {
+        self.tiles[y][x] == TileType::Pellet
+    }
+
+    pub fn is_player(&self, x: usize, y: usize) -> bool {
+        self.tiles[y][x] == TileType::Player
+    }
+
+    pub fn is_ghost(&self, x: usize, y: usize) -> bool {
+        self.tiles[y][x] == TileType::Ghost
+    }
+
+    pub fn set(&mut self, x: usize, y: usize, tile_type: TileType) {
+        self.tiles[y][x] = tile_type;
+    }
+
+    pub fn get(&self, x: usize, y: usize) -> TileType {
+        self.tiles[y][x]
     }
 }
 
@@ -64,8 +89,8 @@ impl MapLoader for TextMapLoader {
 }
 
 /// 检查当前坐标是否合法
-pub fn check_position(y: i32, x: i32, height: usize, width: usize) -> bool {
-    y >= 0 && (y as usize) < height && x >= 0 && (x as usize) < width
+pub fn check_position(x: i32, y: i32, width: usize, height: usize) -> bool {
+    x >= 0 && (x as usize) < width && y >= 0 && (y as usize) < height
 }
 
 #[cfg(test)]

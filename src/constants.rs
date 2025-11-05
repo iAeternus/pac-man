@@ -25,7 +25,21 @@ pub const WALL_COLOR: Color = Color::srgb(0.0, 0.6, 1.0);
 
 // 道具参数
 pub const PELLET_RADIUS: f32 = 2.0;
+pub const POWER_PELLET_RADIUS: f32 = 4.0;
 pub const PELLET_COLOR: Color = Color::WHITE;
+pub const POWER_PELLET_COLOR: Color = Color::WHITE;
+// pub const POWER_PELLET_POSITIONS: [(usize, usize); 4] = [
+//     (3, 1),   // 左上角
+//     (3, 26),  // 右上角
+//     (23, 1),  // 左下角
+//     (23, 26), // 右下角
+// ];
+pub const POWER_PELLET_POSITIONS: [(usize, usize); 4] = [
+    (1, 3),   // 左上角
+    (26, 3),  // 右上角
+    (1, 23),  // 左下角
+    (26, 23), // 右下角
+];
 
 // 玩家参数
 pub const PLAYER_RADIUS: f32 = 6.0;

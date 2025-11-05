@@ -2,9 +2,9 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
     BACKGROUND_COLOR, EatPelletEvent, FontAssets, GameState, LanguageSettings, Score,
-    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_menu_button, handle_player_input,
-    load_font_assets, load_map_data, player_update, setup_map_ui, setup_menu_ui, spawn_new_pellet,
-    sync_player_ui,
+    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_eat_pellet_message, handle_menu_button,
+    handle_player_input, load_font_assets, load_map_data, player_update, setup_map_ui,
+    setup_menu_ui, sync_player_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -21,7 +21,7 @@ fn main() -> anyhow::Result<()> {
         .init_state::<GameState>()
         .init_resource::<LanguageSettings>()
         .init_resource::<FontAssets>()
-        .init_resource::<Score>()
+        .insert_resource(Score { value: 0 })
         .insert_resource(ClearColor(BACKGROUND_COLOR))
         .add_message::<EatPelletEvent>()
         .add_systems(Startup, (load_font_assets, setup_camera, load_map_data))
@@ -35,10 +35,10 @@ fn main() -> anyhow::Result<()> {
         .add_systems(
             Update,
             (
-                handle_player_input, // 输入
-                player_update,       // 移动
-                sync_player_ui,      // 同步位置
-                spawn_new_pellet,    // 豆子更新
+                handle_player_input,                            // 输入
+                player_update.after(handle_player_input),       // 移动
+                sync_player_ui.after(player_update),            // 同步位置
+                handle_eat_pellet_message.after(player_update), // 处理吃豆事件
             )
                 .run_if(in_state(GameState::Playing)),
         )

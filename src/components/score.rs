@@ -7,7 +7,8 @@ pub struct Score {
 }
 
 impl Score {
-    pub fn new(val: u32) -> Self {
-        Self { value: val }
+    /// 吃豆分数 + 1
+    pub fn plus_one(&mut self) {
+        self.value += 1;
     }
 }
