@@ -13,11 +13,12 @@ pub enum TileType {
 }
 
 /// 地图数据
-/// 注意：只有数组访问是 tiles[y][x]，其他一律为 (x, y)
+/// 注意：只有数组访问是 ```tiles[y][x]```，其他一律为 (x, y)
 #[derive(Debug, Resource)]
 pub struct MapData {
     pub width: usize,
     pub height: usize,
+    /// 逻辑坐标即二维数组下标，采用行优先（y），向右为x轴正方向，向下为y轴正方向
     pub tiles: Vec<Vec<TileType>>,
 }
 

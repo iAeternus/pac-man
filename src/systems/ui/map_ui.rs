@@ -16,9 +16,9 @@ pub struct MapUI;
 #[derive(Component)]
 pub struct WallUI;
 
-/// 绘制地图UI
+/// 绘制地图 UI
 pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
-    // (offset_x, offset_y)为地图左上角点
+    // 世界坐标系以屏幕中心的(offset_x, offset_y)为原点，向右为x轴正方向，向上为y轴正方向
     let offset_x = -((map_data.width as f32) * TILE_SIZE) / 2.0;
     let offset_y = ((map_data.height as f32) * TILE_SIZE) / 2.0;
 
