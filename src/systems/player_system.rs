@@ -34,11 +34,41 @@ pub fn handle_player_input(
             if check_position(next_pos.x, next_pos.y, map_data.width, map_data.height)
                 && !map_data.is_wall(next_pos.x as usize, next_pos.y as usize)
             {
-                player.set_direction(dir);
+                player.movement.set_direction(dir);
             }
         }
     }
 }
+
+// /// 更新玩家
+// pub fn player_update(
+//     mut query: Query<&mut Player>,
+//     mut map_data: ResMut<MapData>,
+//     mut eat_evt: MessageWriter<EatPelletEvent>,
+//     time: Res<Time>,
+// ) {
+//     for mut player in &mut query {
+//         if !player.is_moving {
+//             // 不在移动时，重置累积时间
+//             player.reset_accumulated_time();
+//             continue;
+//         }
+
+//         player.accumulated_time += time.delta_secs();
+//         while player.can_move() {
+//             // 执行移动
+//             if let Some(new_pos) = player.try_move(&map_data.tiles) {
+//                 player.tile_pos = new_pos;
+//                 if map_data.is_pellet(new_pos.x as usize, new_pos.y as usize) {
+//                     map_data.set(new_pos.x as usize, new_pos.y as usize, TileType::Empty);
+//                     eat_evt.write(EatPelletEvent::new(new_pos));
+//                 }
+//             }
+//             // 减去移动间隔，继续检查是否还能移动
+//             player.accumulated_time -= player.get_move_interval();
+//         }
+//     }
+// }
 
 /// 更新玩家
 pub fn player_update(
@@ -48,14 +78,7 @@ pub fn player_update(
     time: Res<Time>,
 ) {
     for mut player in &mut query {
-        if !player.is_moving {
-            // 不在移动时，重置累积时间
-            player.reset_accumulated_time();
-            continue;
-        }
-
-        player.accumulated_time += time.delta_secs();
-        while player.can_move() {
+        while player.movement.update(time.delta_secs()) {
             // 执行移动
             if let Some(new_pos) = player.try_move(&map_data.tiles) {
                 player.tile_pos = new_pos;
@@ -64,8 +87,6 @@ pub fn player_update(
                     eat_evt.write(EatPelletEvent::new(new_pos));
                 }
             }
-            // 减去移动间隔，继续检查是否还能移动
-            player.accumulated_time -= player.get_move_interval();
         }
     }
 }

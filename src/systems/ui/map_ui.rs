@@ -2,12 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, POWER_PELLET_COLOR,
-    POWER_PELLET_RADIUS, Pellet, PelletType, Player, TILE_SIZE, WALL_COLOR, WALL_THICKNESS, Z_MAP,
-    Z_PELLET, Z_PLAYER, Z_WALL,
-    components::{MapData, TileType},
-    is_power_pellet,
-    ui::player_ui::{PelletUI, PlayerUI},
+    HALF, Movement, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, POWER_PELLET_COLOR, POWER_PELLET_RADIUS, Pellet, PelletType, Player, TILE_SIZE, WALL_COLOR, WALL_THICKNESS, Z_MAP, Z_PELLET, Z_PLAYER, Z_WALL, components::{MapData, TileType}, is_power_pellet, ui::player_ui::{PelletUI, PlayerUI}
 };
 
 #[derive(Component)]

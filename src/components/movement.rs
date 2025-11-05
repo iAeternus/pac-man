@@ -11,7 +11,7 @@ pub struct Movement {
     /// 是否正在移动
     pub is_moving: bool,
     /// 累积时间
-    pub accumulated_time: f32,
+    accumulated_time: f32,
 }
 
 impl Movement {
@@ -52,7 +52,7 @@ impl Movement {
         }
 
         self.accumulated_time += delta_secs;
-        
+
         if self.can_move() {
             // 扣除移动间隔，返回true表示可以移动
             self.accumulated_time -= self.get_move_interval();
