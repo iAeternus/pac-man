@@ -30,6 +30,13 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
         ))
         .id();
 
+    // info!("Map size = {}x{}", map_data.width, map_data.height);
+    // info!("Sample tile[0][0] (top-left): {:?}", map_data.tiles[0][0]);
+    // info!(
+    //     "Sample tile[last row][0] (bottom-left): {:?}",
+    //     map_data.tiles[map_data.height - 1][0]
+    // );
+
     // 绘制地图
     let mut lines = vec![];
     for y in 0..map_data.height {
@@ -61,6 +68,13 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
                         radius: PELLET_RADIUS,
                         center: Vec2::new(px + HALF, py - HALF),
                     };
+
+                    // info!("Pellet row 0 y = {}", offset_y - 0.0 * TILE_SIZE);
+                    // info!(
+                    //     "Pellet last row y = {}",
+                    //     offset_y - (map_data.height - 1) as f32 * TILE_SIZE
+                    // );
+
                     commands.entity(root).with_children(|parent| {
                         parent.spawn((
                             ShapeBuilder::with(&circle)
@@ -76,7 +90,6 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
                         radius: PLAYER_RADIUS,
                         center: Vec2::new(px + HALF, py - HALF),
                     };
-                    info!("Player start position: ({},{})", x, y);
                     commands.spawn((
                         ShapeBuilder::with(&circle)
                             .fill(Fill::color(PLAYER_COLOR))

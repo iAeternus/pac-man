@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, MapData, MapUI, PELLET_COLOR, PELLET_RADIUS, Player, TILE_SIZE,
+    HALF, MapData, MapUI, PELLET_COLOR, PELLET_RADIUS, Player, TILE_SIZE, Z_PELLET, Z_PLAYER,
     game::{EatPelletEvent, TileType},
 };
 
@@ -20,14 +20,10 @@ pub fn sync_player_ui(
     let offset_x = -((map_data.width as f32) * TILE_SIZE) / 2.0;
     let offset_y = ((map_data.height as f32) * TILE_SIZE) / 2.0;
     for (player, mut transform) in &mut player_query {
-        transform.translation.x = offset_x + player.tile_pos.x as f32 * TILE_SIZE + HALF;
-        transform.translation.y = offset_y - player.tile_pos.y as f32 * TILE_SIZE - HALF;
-        info!(
-    "Player tile=({}, {}), world=({}, {})",
-    player.tile_pos.x, player.tile_pos.y,
-    transform.translation.x, transform.translation.y
-);
-
+        let world_x = offset_x + player.tile_pos.x as f32 * TILE_SIZE + HALF;
+        let world_y = offset_y - player.tile_pos.y as f32 * TILE_SIZE - HALF;
+        // 不要问这个偏移量是怎么来的，问就是硬数的
+        transform.translation = Vec3::new(world_x + 6.0 * TILE_SIZE + HALF, world_y + 8.0 * TILE_SIZE, Z_PLAYER);
     }
 }
 
@@ -49,18 +45,18 @@ pub fn spawn_new_pellet(
         for y in 0..map_data.height {
             for x in 0..map_data.width {
                 if map_data.tiles[y][x] == TileType::Pellet {
-                    let px = offset_x + x as f32 * TILE_SIZE;
-                    let py = offset_y - y as f32 * TILE_SIZE;
+                    let world_x = offset_x + x as f32 * TILE_SIZE + HALF;
+                    let world_y = offset_y - y as f32 * TILE_SIZE - HALF;
                     let circle = shapes::Circle {
                         radius: PELLET_RADIUS,
-                        center: Vec2::new(px + HALF, py - HALF),
+                        center: Vec2::new(world_x, world_y),
                     };
                     commands.entity(root).with_children(|parent| {
                         parent.spawn((
                             ShapeBuilder::with(&circle)
                                 .fill(Fill::color(PELLET_COLOR))
                                 .build(),
-                            Transform::from_xyz(0.0, 0.0, 2.0),
+                            Transform::from_xyz(0.0, 0.0, Z_PELLET),
                             PelletUI,
                         ));
                     });

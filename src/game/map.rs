@@ -63,6 +63,11 @@ impl MapLoader for TextMapLoader {
     }
 }
 
+/// 检查当前坐标是否合法
+pub fn check_position(y: i32, x: i32, height: usize, width: usize) -> bool {
+    y >= 0 && (y as usize) < height && x >= 0 && (x as usize) < width
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

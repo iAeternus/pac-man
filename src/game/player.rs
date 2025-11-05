@@ -1,7 +1,7 @@
 use bevy::ecs::component::Component;
 use glam::IVec2;
 
-use crate::game::TileType;
+use crate::{check_position, game::TileType};
 
 /// 玩家
 #[derive(Debug, Component)]
@@ -36,17 +36,9 @@ impl Player {
         let height = tiles.len();
         let width = tiles.get(0).map_or(0, |l| l.len());
 
-        // 边界检查
-        if new_pos.y < 0
-            || new_pos.y as usize >= height
-            || new_pos.x < 0
-            || new_pos.x as usize >= width
+        if !check_position(new_pos.y, new_pos.x, height, width)
+            || tiles[new_pos.y as usize][new_pos.x as usize] == TileType::Wall
         {
-            return None;
-        }
-
-        // 墙体检测
-        if tiles[new_pos.y as usize][new_pos.x as usize] == TileType::Wall {
             return None;
         }
 
