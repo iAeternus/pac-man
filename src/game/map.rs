@@ -13,7 +13,7 @@ pub enum TileType {
 }
 
 /// 地图数据
-#[derive(Debug)]
+#[derive(Debug, Resource)]
 pub struct MapData {
     pub width: usize,
     pub height: usize,
@@ -62,9 +62,6 @@ impl MapLoader for TextMapLoader {
         Ok(map)
     }
 }
-
-#[derive(Resource)]
-pub struct MapDataResource(pub MapData);
 
 #[cfg(test)]
 mod tests {

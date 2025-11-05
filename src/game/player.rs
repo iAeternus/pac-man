@@ -4,22 +4,22 @@ use glam::IVec2;
 use crate::game::TileType;
 
 /// 玩家
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub struct Player {
     /// 当前地图格坐标
     pub tile_pos: IVec2,
-    /// 速度
-    pub speed: f32,
     /// 方向
     pub direction: IVec2,
+    /// 速度
+    pub speed: f32,
 }
 
 impl Player {
-    pub fn new(y: i32, x: i32) -> Self {
+    pub fn new(x: i32, y: i32) -> Self {
         Self {
-            tile_pos: IVec2::new(y, x),
-            speed: 4.0,
+            tile_pos: IVec2::new(x, y),
             direction: IVec2::ZERO,
+            speed: 4.0,
         }
     }
 
@@ -27,9 +27,9 @@ impl Player {
         self.direction = dir;
     }
 
-    pub fn try_move(&mut self, tiles: Vec<Vec<TileType>>) {
+    pub fn try_move(&mut self, tiles: &Vec<Vec<TileType>>) -> Option<IVec2> {
         if self.direction == IVec2::ZERO {
-            return;
+            return None;
         }
 
         let new_pos = self.tile_pos + self.direction;
@@ -42,19 +42,14 @@ impl Player {
             || new_pos.x < 0
             || new_pos.x as usize >= width
         {
-            return;
+            return None;
         }
 
         // 墙体检测
         if tiles[new_pos.y as usize][new_pos.x as usize] == TileType::Wall {
-            return;
+            return None;
         }
 
-        self.tile_pos = new_pos;
+        Some(new_pos)
     }
-}
-
-#[derive(Component)]
-pub struct PlayerComponent {
-    pub player: Player,
 }

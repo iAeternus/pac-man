@@ -3,10 +3,10 @@ use std::path::Path;
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    BACKGROUND_COLOR, FontAssets, GameState, HOVERED_COLOR, LanguageSettings, MAP_PATH,
-    MapDataResource, MapLoader, NONE_COLOR, PRESSED_COLOR, PlayerComponent, QuitButton,
-    StartButton, TextMapLoader, WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, load_font_assets,
-    setup_map_ui, setup_menu_ui,
+    BACKGROUND_COLOR, EatPelletEvent, FontAssets, GameState, HOVERED_COLOR, LanguageSettings,
+    MAP_PATH, MapLoader, NONE_COLOR, PRESSED_COLOR, QuitButton, Score, StartButton, TextMapLoader,
+    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_player_input, load_font_assets,
+    player_update, setup_map_ui, setup_menu_ui, spawn_new_pellet, sync_player_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -23,7 +23,9 @@ fn main() -> anyhow::Result<()> {
         .init_state::<GameState>()
         .init_resource::<LanguageSettings>()
         .init_resource::<FontAssets>()
+        .init_resource::<Score>()
         .insert_resource(ClearColor(BACKGROUND_COLOR))
+        .add_message::<EatPelletEvent>()
         .add_systems(Startup, (load_font_assets, setup_camera, load_map_data))
         // 菜单系统
         .add_systems(OnEnter(GameState::Menu), setup_menu_ui)
@@ -34,7 +36,13 @@ fn main() -> anyhow::Result<()> {
         // 玩家系统
         .add_systems(
             Update,
-            (handle_player_input, update_player_position).run_if(in_state(GameState::Playing)),
+            (
+                handle_player_input, // 输入
+                player_update,       // 移动
+                sync_player_ui,      // 同步位置
+                spawn_new_pellet,    // 豆子更新
+            )
+                .run_if(in_state(GameState::Playing)),
         )
         .run();
 
@@ -93,20 +101,5 @@ fn load_map_data(mut commands: Commands) {
     let map_path = Path::new(MAP_PATH);
     let map_data = loader.load_map(map_path).expect("Failed to load map");
 
-    commands.insert_resource(MapDataResource(map_data));
-}
-
-fn handle_player_input(
-    _keyboard: Res<ButtonInput<KeyCode>>,
-    mut _query: Query<&mut PlayerComponent>,
-    _map_res: Res<MapDataResource>,
-) {
-    // TODO:
-}
-
-fn update_player_position(
-    mut _query: Query<(&mut Transform, &PlayerComponent)>,
-    _map_res: Res<MapDataResource>,
-) {
-    // TODO:
+    commands.insert_resource(map_data);
 }

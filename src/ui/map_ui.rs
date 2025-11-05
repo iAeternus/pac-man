@@ -2,21 +2,20 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, MapDataResource, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, TILE_SIZE,
-    WALL_COLOR, WALL_THICKNESS,
+    HALF, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, Player, TILE_SIZE, WALL_COLOR,
+    WALL_THICKNESS, Z_MAP, Z_PELLET, Z_PLAYER, Z_WALL,
     game::{MapData, TileType},
+    ui::player_ui::{PelletUI, PlayerUI},
 };
 
 #[derive(Component)]
 pub struct MapUI;
 
 #[derive(Component)]
-pub struct PlayerUI;
+pub struct WallUI;
 
 /// 绘制地图UI
-pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
-    let map_data = &map_res.0;
-
+pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
     // (offset_x, offset_y)为地图左上角点
     let offset_x = -((map_data.width as f32) * TILE_SIZE) / 2.0;
     let offset_y = ((map_data.height as f32) * TILE_SIZE) / 2.0;
@@ -24,7 +23,7 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
     // 根节点
     let root = commands
         .spawn((
-            Transform::from_xyz(0.0, 0.0, 0.0),
+            Transform::from_xyz(0.0, 0.0, Z_MAP),
             GlobalTransform::default(),
             Visibility::default(),
             MapUI,
@@ -51,7 +50,8 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                                 ShapeBuilder::with(&line)
                                     .stroke(Stroke::new(WALL_COLOR, WALL_THICKNESS))
                                     .build(),
-                                Transform::from_xyz(0.0, 0.0, 1.0),
+                                Transform::from_xyz(0.0, 0.0, Z_WALL),
+                                WallUI,
                             ));
                         });
                     }
@@ -66,7 +66,8 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                             ShapeBuilder::with(&circle)
                                 .fill(Fill::color(PELLET_COLOR))
                                 .build(),
-                            Transform::from_xyz(0.0, 0.0, 2.0),
+                            Transform::from_xyz(0.0, 0.0, Z_PELLET),
+                            PelletUI,
                         ));
                     });
                 }
@@ -75,12 +76,14 @@ pub fn setup_map_ui(mut commands: Commands, map_res: Res<MapDataResource>) {
                         radius: PLAYER_RADIUS,
                         center: Vec2::new(px + HALF, py - HALF),
                     };
+                    info!("Player start position: ({},{})", x, y);
                     commands.spawn((
                         ShapeBuilder::with(&circle)
                             .fill(Fill::color(PLAYER_COLOR))
                             .build(),
-                        Transform::from_xyz(0.0, 0.0, 3.0),
+                        Transform::from_xyz(0.0, 0.0, Z_PLAYER),
                         PlayerUI,
+                        Player::new(x as i32, y as i32),
                     ));
                 }
                 TileType::Ghost | TileType::Empty => {}

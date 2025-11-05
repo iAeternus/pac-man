@@ -30,3 +30,9 @@ pub const PELLET_COLOR: Color = Color::WHITE;
 // 玩家参数
 pub const PLAYER_RADIUS: f32 = 6.0;
 pub const PLAYER_COLOR: Color = TITLE_COLOR;
+
+// 渲染Z轴
+pub const Z_MAP: f32 = 0.0;
+pub const Z_WALL: f32 = 1.0;
+pub const Z_PELLET: f32 = 2.0;
+pub const Z_PLAYER: f32 = 3.0;

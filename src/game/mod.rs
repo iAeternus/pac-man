@@ -1,7 +1,11 @@
-mod game_state;
+mod events;
 mod map;
 mod player;
+mod score;
+mod state;
 
-pub use game_state::GameState;
+pub use events::*;
 pub use map::*;
 pub use player::*;
+pub use score::*;
+pub use state::GameState;
