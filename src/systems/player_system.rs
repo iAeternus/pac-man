@@ -3,9 +3,8 @@ use std::usize;
 use bevy::prelude::*;
 
 use crate::{
-    MapData, PelletType, Player, check_position,
+    MapData, Player, check_position,
     components::{EatPelletEvent, TileType},
-    is_power_pellet,
 };
 
 /// 处理玩家输入，设置玩家方向
