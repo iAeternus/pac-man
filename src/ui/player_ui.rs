@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::{
     HALF, MapData, MapUI, PELLET_COLOR, PELLET_RADIUS, Player, TILE_SIZE, Z_PELLET, Z_PLAYER,
-    game::{EatPelletEvent, TileType},
+    components::{EatPelletEvent, TileType},
 };
 
 #[derive(Component)]

@@ -4,7 +4,7 @@ use bevy_prototype_lyon::prelude::*;
 use crate::{
     HALF, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, Player, TILE_SIZE, WALL_COLOR,
     WALL_THICKNESS, Z_MAP, Z_PELLET, Z_PLAYER, Z_WALL,
-    game::{MapData, TileType},
+    components::{MapData, TileType},
     ui::player_ui::{PelletUI, PlayerUI},
 };
 
@@ -29,13 +29,6 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
             MapUI,
         ))
         .id();
-
-    // info!("Map size = {}x{}", map_data.width, map_data.height);
-    // info!("Sample tile[0][0] (top-left): {:?}", map_data.tiles[0][0]);
-    // info!(
-    //     "Sample tile[last row][0] (bottom-left): {:?}",
-    //     map_data.tiles[map_data.height - 1][0]
-    // );
 
     // 绘制地图
     let mut lines = vec![];
@@ -68,12 +61,6 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
                         radius: PELLET_RADIUS,
                         center: Vec2::new(px + HALF, py - HALF),
                     };
-
-                    // info!("Pellet row 0 y = {}", offset_y - 0.0 * TILE_SIZE);
-                    // info!(
-                    //     "Pellet last row y = {}",
-                    //     offset_y - (map_data.height - 1) as f32 * TILE_SIZE
-                    // );
 
                     commands.entity(root).with_children(|parent| {
                         parent.spawn((

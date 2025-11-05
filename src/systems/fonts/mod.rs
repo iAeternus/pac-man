@@ -1,4 +1,4 @@
-use crate::localization::{Language, LanguageSettings};
+use crate::components::localization::{Language, LanguageSettings};
 use bevy::prelude::*;
 
 #[derive(Resource, Default)]

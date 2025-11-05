@@ -1,12 +1,10 @@
-use std::path::Path;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
-    BACKGROUND_COLOR, EatPelletEvent, FontAssets, GameState, HOVERED_COLOR, LanguageSettings,
-    MAP_PATH, MapLoader, NONE_COLOR, PRESSED_COLOR, QuitButton, Score, StartButton, TextMapLoader,
-    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_player_input, load_font_assets,
-    player_update, setup_map_ui, setup_menu_ui, spawn_new_pellet, sync_player_ui,
+    BACKGROUND_COLOR, EatPelletEvent, FontAssets, GameState, LanguageSettings, Score,
+    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_menu_button, handle_player_input,
+    load_font_assets, load_map_data, player_update, setup_map_ui, setup_menu_ui, spawn_new_pellet,
+    sync_player_ui,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -52,54 +50,4 @@ fn main() -> anyhow::Result<()> {
 fn setup_camera(mut commands: Commands) {
     // 创建共享的2D相机
     commands.spawn(Camera2d);
-}
-
-/// 处理菜单页面的按钮
-fn handle_menu_button(
-    mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            Option<&StartButton>,
-            Option<&QuitButton>,
-        ),
-        (Changed<Interaction>, With<Button>),
-    >,
-    mut next_state: ResMut<NextState<GameState>>,
-    mut exit: MessageWriter<AppExit>,
-) {
-    for (interaction, mut color, start_btn, quit_btn) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => {
-                // 按下时的视觉反馈
-                *color = BackgroundColor(PRESSED_COLOR);
-
-                if start_btn.is_some() {
-                    info!("Start pressed -> Switching to Playing");
-                    next_state.set(GameState::Playing);
-                }
-
-                if quit_btn.is_some() {
-                    info!("Quit pressed -> Exiting game");
-                    exit.write(AppExit::Success);
-                }
-            }
-            Interaction::Hovered => {
-                // 悬停效果
-                *color = BackgroundColor(HOVERED_COLOR);
-            }
-            Interaction::None => {
-                // 恢复默认颜色
-                *color = BackgroundColor(NONE_COLOR);
-            }
-        }
-    }
-}
-
-fn load_map_data(mut commands: Commands) {
-    let loader = TextMapLoader;
-    let map_path = Path::new(MAP_PATH);
-    let map_data = loader.load_map(map_path).expect("Failed to load map");
-
-    commands.insert_resource(map_data);
 }

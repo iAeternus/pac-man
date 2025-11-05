@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use crate::{
     MapData, Player, check_position,
-    game::{EatPelletEvent, TileType},
+    components::{EatPelletEvent, TileType},
 };
 
 /// 处理玩家输入

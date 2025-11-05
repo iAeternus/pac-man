@@ -1,7 +1,7 @@
 use bevy::ecs::component::Component;
 use glam::IVec2;
 
-use crate::{check_position, game::TileType};
+use crate::{check_position, components::TileType};
 
 /// 玩家
 #[derive(Debug, Component)]
