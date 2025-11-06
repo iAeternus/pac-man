@@ -9,7 +9,10 @@ pub enum TileType {
     Wall,
     Pellet,
     Player,
-    Ghost,
+    BlinkyGhost,
+    PinkyGhost,
+    InkyGhost,
+    ClydeGhost,
 }
 
 /// 地图数据
@@ -43,16 +46,16 @@ impl MapData {
         self.tiles[y][x] == TileType::Player
     }
 
-    pub fn is_ghost(&self, x: usize, y: usize) -> bool {
-        self.tiles[y][x] == TileType::Ghost
-    }
-
     pub fn set(&mut self, x: usize, y: usize, tile_type: TileType) {
         self.tiles[y][x] = tile_type;
     }
 
     pub fn get(&self, x: usize, y: usize) -> TileType {
         self.tiles[y][x]
+    }
+
+    pub fn is_valid_position(&self, x: i32, y: i32) -> bool {
+        x >= 0 && (x as usize) < self.width && y >= 0 && (y as usize) < self.height
     }
 }
 
@@ -80,7 +83,10 @@ impl MapLoader for TextMapLoader {
                     '#' => TileType::Wall,
                     '.' => TileType::Pellet,
                     'P' => TileType::Player,
-                    'G' => TileType::Ghost,
+                    '2' => TileType::BlinkyGhost,
+                    '3' => TileType::PinkyGhost,
+                    '4' => TileType::InkyGhost,
+                    '5' => TileType::ClydeGhost,
                     _ => TileType::Empty,
                 }
             }

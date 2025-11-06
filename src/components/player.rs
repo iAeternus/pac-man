@@ -1,13 +1,14 @@
 use bevy::ecs::component::Component;
 use glam::IVec2;
 
-use crate::{Movement, check_position, components::TileType};
+use crate::{MapData, Movement, TryMove};
 
 /// 玩家
 #[derive(Debug, Component)]
 pub struct Player {
     /// 当前地图格坐标
     pub tile_pos: IVec2,
+    /// 移动组件
     pub movement: Movement,
 }
 
@@ -18,21 +19,19 @@ impl Player {
             movement: Movement::new(6.0),
         }
     }
+}
 
-    pub fn try_move(&mut self, tiles: &Vec<Vec<TileType>>) -> Option<IVec2> {
-        let movement = &mut self.movement;
-        if movement.direction == IVec2::ZERO || !movement.is_moving {
+impl TryMove for Player {
+    fn try_move(&mut self, map_data: &MapData) -> Option<IVec2> {
+        if self.movement.direction == IVec2::ZERO || !self.movement.is_moving {
             return None;
         }
 
-        let new_pos = self.tile_pos + movement.direction;
-        let height = tiles.len();
-        let width = tiles.get(0).map_or(0, |l| l.len());
-
-        if !check_position(new_pos.x, new_pos.y, width, height)
-            || tiles[new_pos.y as usize][new_pos.x as usize] == TileType::Wall
+        let new_pos = self.tile_pos + self.movement.direction;
+        if !map_data.is_valid_position(new_pos.x, new_pos.y)
+            || map_data.is_wall(new_pos.x as usize, new_pos.y as usize)
         {
-            movement.stop_moving();
+            self.movement.stop_moving();
             return None;
         }
 

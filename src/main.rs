@@ -2,16 +2,17 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::plugin::ShapePlugin;
 use pac_man::{
     BACKGROUND_COLOR, EatPelletEvent, FontAssets, GameState, LanguageSettings, Score,
-    WINDOW_HEIGHT, WINDOW_WIDTH, cleanup_menu_ui, handle_eat_pellet_message, handle_menu_button,
-    handle_player_input, load_font_assets, load_map_data, player_update, setup_map_ui,
-    setup_menu_ui, sync_player_ui,
+    WINDOW_HEIGHT, WINDOW_TITLE, WINDOW_WIDTH, cleanup_menu_ui, ghost_ai_system, ghost_move_system,
+    handle_eat_pellet_message, handle_menu_button, handle_player_input, load_font_assets,
+    load_map_data, player_update, setup_map_ui, setup_menu_ui, spawn_ghost_ui, sync_player_ui,
+    update_ghost_ui,
 };
 
-fn main() -> anyhow::Result<()> {
+fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                title: "Pac-Man".into(),
+                title: WINDOW_TITLE.into(),
                 resolution: (WINDOW_WIDTH, WINDOW_HEIGHT).into(),
                 ..default()
             }),
@@ -35,16 +36,25 @@ fn main() -> anyhow::Result<()> {
         .add_systems(
             Update,
             (
-                handle_player_input,                            // 输入
-                player_update.after(handle_player_input),       // 移动
-                sync_player_ui.after(player_update),            // 同步位置
-                handle_eat_pellet_message.after(player_update), // 处理吃豆事件
+                handle_player_input,
+                player_update.after(handle_player_input),
+                sync_player_ui,
+                handle_eat_pellet_message.after(player_update),
+            )
+                .run_if(in_state(GameState::Playing)),
+        )
+        // 幽灵系统
+        .add_systems(
+            Update,
+            (
+                ghost_ai_system,
+                ghost_move_system.after(ghost_ai_system),
+                spawn_ghost_ui,
+                update_ghost_ui.after(ghost_move_system),
             )
                 .run_if(in_state(GameState::Playing)),
         )
         .run();
-
-    Ok(())
 }
 
 fn setup_camera(mut commands: Commands) {

@@ -1,8 +1,20 @@
-use bevy::ecs::component::Component;
 use glam::IVec2;
 
+use crate::MapData;
+
+pub trait TryMove {
+    /// 尝试移动
+    ///
+    /// ## Params
+    /// - map_data: 地图数据
+    ///
+    /// ## Return
+    /// 若可以移动则返回移动后的新位置，否则返回 None
+    fn try_move(&mut self, map_data: &MapData) -> Option<IVec2>;
+}
+
 /// 移动组件
-#[derive(Debug, Component, Clone)]
+#[derive(Debug, Clone)]
 pub struct Movement {
     /// 方向
     pub direction: IVec2,
@@ -11,7 +23,7 @@ pub struct Movement {
     /// 是否正在移动
     pub is_moving: bool,
     /// 累积时间
-    accumulated_time: f32,
+    pub accumulated_time: f32,
 }
 
 impl Movement {
@@ -27,6 +39,11 @@ impl Movement {
     pub fn set_direction(&mut self, dir: IVec2) {
         self.direction = dir;
         self.is_moving = true;
+    }
+
+    pub fn start_moving(&mut self) {
+        self.is_moving = true;
+        self.accumulated_time = 0.0;
     }
 
     pub fn stop_moving(&mut self) {

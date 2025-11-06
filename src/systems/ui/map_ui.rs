@@ -2,7 +2,12 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    HALF, Movement, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS, POWER_PELLET_COLOR, POWER_PELLET_RADIUS, Pellet, PelletType, Player, TILE_SIZE, WALL_COLOR, WALL_THICKNESS, Z_MAP, Z_PELLET, Z_PLAYER, Z_WALL, components::{MapData, TileType}, is_power_pellet, ui::player_ui::{PelletUI, PlayerUI}
+    Ghost, GhostType, HALF, PELLET_COLOR, PELLET_RADIUS, PLAYER_COLOR, PLAYER_RADIUS,
+    POWER_PELLET_COLOR, POWER_PELLET_RADIUS, Pellet, PelletType, Player, TILE_SIZE, WALL_COLOR,
+    WALL_THICKNESS, Z_MAP, Z_PELLET, Z_PLAYER, Z_WALL,
+    components::{MapData, TileType},
+    is_power_pellet,
+    ui::player_ui::{PelletUI, PlayerUI},
 };
 
 #[derive(Component)]
@@ -85,6 +90,23 @@ pub fn setup_map_ui(mut commands: Commands, map_data: Res<MapData>) {
                         PlayerUI,
                         Player::new(x as i32, y as i32),
                     ));
+                }
+                TileType::BlinkyGhost
+                | TileType::PinkyGhost
+                | TileType::InkyGhost
+                | TileType::ClydeGhost => {
+                    if let Some(ghost_type) = match map_data.get(x, y) {
+                        TileType::BlinkyGhost => Some(GhostType::Blinky),
+                        TileType::PinkyGhost => Some(GhostType::Pinky),
+                        TileType::InkyGhost => Some(GhostType::Inky),
+                        TileType::ClydeGhost => Some(GhostType::Clyde),
+                        _ => None,
+                    } {
+                        commands.spawn((
+                            Ghost::new(x as i32, y as i32, ghost_type),
+                            Transform::from_xyz(px + HALF, py - HALF, 0.0), // 临时位置，会被ghost_ui系统更新
+                        ));
+                    }
                 }
                 _ => {}
             }

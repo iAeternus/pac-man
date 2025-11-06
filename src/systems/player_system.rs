@@ -3,7 +3,7 @@ use std::usize;
 use bevy::prelude::*;
 
 use crate::{
-    MapData, Player, check_position,
+    MapData, Player, TryMove, check_position,
     components::{EatPelletEvent, TileType},
 };
 
@@ -40,36 +40,6 @@ pub fn handle_player_input(
     }
 }
 
-// /// 更新玩家
-// pub fn player_update(
-//     mut query: Query<&mut Player>,
-//     mut map_data: ResMut<MapData>,
-//     mut eat_evt: MessageWriter<EatPelletEvent>,
-//     time: Res<Time>,
-// ) {
-//     for mut player in &mut query {
-//         if !player.is_moving {
-//             // 不在移动时，重置累积时间
-//             player.reset_accumulated_time();
-//             continue;
-//         }
-
-//         player.accumulated_time += time.delta_secs();
-//         while player.can_move() {
-//             // 执行移动
-//             if let Some(new_pos) = player.try_move(&map_data.tiles) {
-//                 player.tile_pos = new_pos;
-//                 if map_data.is_pellet(new_pos.x as usize, new_pos.y as usize) {
-//                     map_data.set(new_pos.x as usize, new_pos.y as usize, TileType::Empty);
-//                     eat_evt.write(EatPelletEvent::new(new_pos));
-//                 }
-//             }
-//             // 减去移动间隔，继续检查是否还能移动
-//             player.accumulated_time -= player.get_move_interval();
-//         }
-//     }
-// }
-
 /// 更新玩家
 pub fn player_update(
     mut query: Query<&mut Player>,
@@ -80,7 +50,7 @@ pub fn player_update(
     for mut player in &mut query {
         while player.movement.update(time.delta_secs()) {
             // 执行移动
-            if let Some(new_pos) = player.try_move(&map_data.tiles) {
+            if let Some(new_pos) = player.try_move(&map_data) {
                 player.tile_pos = new_pos;
                 if map_data.is_pellet(new_pos.x as usize, new_pos.y as usize) {
                     map_data.set(new_pos.x as usize, new_pos.y as usize, TileType::Empty);

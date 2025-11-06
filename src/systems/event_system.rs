@@ -26,7 +26,7 @@ fn remove_pellet(
     position: IVec2,
 ) {
     for (entity, pellet) in pellet_query.iter() {
-        if pellet.position.y == position.y && pellet.position.x == position.x {
+        if pellet.position == position {
             commands.entity(entity).despawn();
             break;
         }
