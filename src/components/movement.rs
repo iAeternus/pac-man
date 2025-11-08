@@ -27,11 +27,11 @@ pub struct Movement {
 }
 
 impl Movement {
-    pub fn new(speed: f32) -> Self {
+    pub fn new(speed: f32, is_moving: bool) -> Self {
         Self {
             direction: IVec2::ZERO,
             speed,
-            is_moving: false,
+            is_moving,
             accumulated_time: 0.0,
         }
     }

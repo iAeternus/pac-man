@@ -16,7 +16,7 @@ impl Player {
     pub fn new(x: i32, y: i32) -> Self {
         Self {
             tile_pos: IVec2::new(x, y),
-            movement: Movement::new(6.0),
+            movement: Movement::new(6.0, false),
         }
     }
 }

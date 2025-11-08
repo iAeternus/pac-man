@@ -4,6 +4,7 @@ use glam::IVec2;
 use crate::POWER_PELLET_POSITIONS;
 
 /// 豆子类型
+#[derive(PartialEq, Eq)]
 pub enum PelletType {
     General,
     Power,

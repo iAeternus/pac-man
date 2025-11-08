@@ -38,8 +38,8 @@ fn main() {
             (
                 handle_player_input,
                 player_update.after(handle_player_input),
-                sync_player_ui,
                 handle_eat_pellet_message.after(player_update),
+                sync_player_ui,
             )
                 .run_if(in_state(GameState::Playing)),
         )

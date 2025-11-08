@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{EatPelletEvent, Pellet, PelletType, PelletUI, Score};
+use crate::{EatPelletEvent, Ghost, Pellet, PelletType, PelletUI, Score};
 
 /// 处理吃豆事件
 pub fn handle_eat_pellet_message(
@@ -8,10 +8,12 @@ pub fn handle_eat_pellet_message(
     mut reader: MessageReader<EatPelletEvent>,
     pellet_query: Query<(Entity, &Pellet), With<PelletUI>>,
     mut score: ResMut<Score>,
+    mut ghost_query: Query<&mut Ghost>,
 ) {
     for evt in reader.read() {
         remove_pellet(&mut commands, &pellet_query, evt.position);
         update_score(&mut score, &evt.pellet_type);
+        update_ghost(&mut ghost_query, &evt.pellet_type);
 
         // TODO: 播放音效
         // TODO: 触发特效
@@ -42,6 +44,15 @@ fn update_score(score: &mut ResMut<Score>, pellet_type: &PelletType) {
         PelletType::Power => {
             score.value += 10; // 能量豆加10分
             // TODO: 触发幽灵变蓝等特殊效果
+        }
+    }
+}
+
+/// 更新幽灵
+fn update_ghost(ghost_query: &mut Query<&mut Ghost>, pellet_type: &PelletType) {
+    if *pellet_type == PelletType::Power {
+        for mut ghost in ghost_query {
+            ghost.set_frightened(6.0);
         }
     }
 }
