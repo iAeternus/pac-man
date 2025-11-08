@@ -25,9 +25,9 @@ cargo run
 
 * [x] Game State Machine (Menu / Playing / Paused / Game Over)
 * [x] Map System (Static map loading and tile-based collision)
-* [ ] Player System (Keyboard input, movement, pellet eating)
-* [ ] Ghost System (Chasing, fleeing, patrolling behaviors)
-* [ ] Item System (Normal and power pellets)
+* [x] Player System (Keyboard input, movement, pellet eating)
+* [x] Ghost System (Chasing, fleeing, patrolling behaviors)
+* [x] Item System (Normal and power pellets)
 * [ ] Collision System (Player–Ghost / Player–Item detection)
 * [ ] Scoring System (Real-time score tracking and display)
 * [ ] Input System (↑↓←→ / Space / Enter controls)
